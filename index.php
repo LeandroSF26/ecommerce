@@ -2,20 +2,21 @@
 
 require_once("vendor/autoload.php");
 
-$app = new \Slim\Slim();
+use \Slim\Slim;
+use \Hcode\Page;
 
-$app->config('debug', true);
+$app = new Slim();
 
-$app->get('/', function() {
+$app->config('debug', true);            // Habilita o debug
+
+$app->get('/', function() {				// Executa o código quando estiver na raiz do projeto
     
-	$sql = new Hcode\DB\Sql();
+	$page = new Page();					// Método construtor da classe Page adiciona o header da página
 
-	$results = $sql->select("SELECT * FROM tb_users");
-
-	echo json_encode($results);
+	$page->setTpl("index");				// Adiciona o conteúdo da página do site
 
 });
 
-$app->run();
+$app->run();							// Roda o template
 
  ?>

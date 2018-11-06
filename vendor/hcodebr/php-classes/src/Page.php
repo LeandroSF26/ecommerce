@@ -12,12 +12,12 @@ class Page{
 		"data"=>[]
 	];
 
-	public function __construct($opts = array()){
+	public function __construct($opts = array(), $tpl_dir = "/views/"){
 
 		$this->options = array_merge($this->defaults, $opts);      
 
 		$config = array(
-			"tpl_dir"       => $_SERVER["DOCUMENT_ROOT"] . "/views/",       // Local onde é armazenado os templates
+			"tpl_dir"       => $_SERVER["DOCUMENT_ROOT"] . $tpl_dir,       // Local onde é armazenado os templates
 			"cache_dir"     => $_SERVER["DOCUMENT_ROOT"] . "/views-cache/", // Local onde é armazenado o cache da página
 			"debug"         => false
 		);

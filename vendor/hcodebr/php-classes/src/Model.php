@@ -4,12 +4,12 @@ namespace Hcode;
 
 class Model{
 
-	private $values = [];
+	private $values = [];								// Variável para armazenar os métodos get e setter
 
 	public function __call($name, $args){
 
-		$method = substr($name, 0, 3);
-		$fieldName = substr($name, 3, strlen($name));
+		$method = substr($name, 0, 3);					// Separa o método passado e armazena em $method
+		$fieldName = substr($name, 3, strlen($name));	// Separa o campo para o método get ou set
 
 		switch($method)
 		{
@@ -24,13 +24,15 @@ class Model{
 
 	}
 
+	// Chamada do método set para as informações recebidas do banco de dados
 	public function setData($data = array()){
 
 		foreach ($data as $key => $value) {
-			$this->{"set" . $key}($value);
+			$this->{"set" . $key}($value);				//Chama o método set com a informação a ser setada
 		}
 	}
 
+	// Retorna os métodos gets
 	public function getValues(){
 
 		return $this->values;

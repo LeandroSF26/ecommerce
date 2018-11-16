@@ -10,6 +10,7 @@ class User extends Model{
 
 	const SESSION = "User";                      // Variável de sessão que contém as informações do usuário logado
 	const SECRET = "HcodePhp7_Secret";
+	const SECRET_IV = "HcodePhp7_Secret";
 
 	public static function login($login, $password){
 
@@ -134,6 +135,7 @@ class User extends Model{
 		$sql->query("CALL sp_users_delete(:iduser)", array(
 			"iduser"=>$this->getiduser()
 		));
+
 	}
 
 	public static function getForgot($email){
@@ -165,7 +167,9 @@ class User extends Model{
 
 			$dataRecovery = $results2[0];
 
-			$code = base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_128, User::SECRET, $dataRecovery["idrecovery"], MCRYPT_MODE_ECB));
+			$code = base64_encode(openssl_encrypt(json_encode($dataRecovery["idrecovery"]), 'AES-128-CBC', User::SECRET, 0, User::SECRET_IV));
+
+			//$code = base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_128, User::SECRET, $dataRecovery["idrecovery"], MCRYPT_MODE_ECB));
 
 			$link = "http://www.ecommerce.com.br/admin/forgot/reset?code=$code";
 
@@ -186,9 +190,12 @@ class User extends Model{
 	public static function validForgotDecrypt($code){
 
 
-		$idrecovery = mcrypt_decrypt(MCRYPT_RIJNDAEL_128, User::SECRET, base64_decode($code), MCRYPT_MODE_ECB);
+		//$idrecovery = mcrypt_decrypt(MCRYPT_RIJNDAEL_128, User::SECRET, base64_decode($code), MCRYPT_MODE_ECB);
 
-	
+
+		$idrecovery1 = openssl_decrypt(base64_decode($code), 'AES-128-CBC', User::SECRET, 0 , User::SECRET_IV);	
+
+		$idrecovery = json_decode($idrecovery1);
 
 		$sql = new Sql();
 

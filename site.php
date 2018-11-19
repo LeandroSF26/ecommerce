@@ -1,13 +1,16 @@
 <?php
 
-use \Hcode\PageAdmin;
+use \Hcode\Page;
+use \Hcode\Model\Product;
 
 // Rota para raiz do projeto
-$app->get('/', function() {				
-    
-	$page = new Page();					// Método construtor da classe Page adiciona o header da página
+$app->get('/', function() {		
 
-	$page->setTpl("index");				// Adiciona o conteúdo da página do sistema
+	$products = Product::listAll();		
+    
+	$page = new Page();					
+
+	$page->setTpl("index", ['products'=>Product::checkList($products)]);				
 
 });
 

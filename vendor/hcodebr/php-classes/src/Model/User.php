@@ -134,13 +134,11 @@ class User extends Model{
 				":desemail"=>$this->getdesemail(),
 				":nrphone"=>$this->getnrphone(),
 				":inadmin"=>$this->getinadmin()
-
 		));
 
 		$this->setData($results[0]);
 
-		header("Location: /admin/users");
-		exit;
+		
 	}
 
 	
@@ -149,10 +147,10 @@ class User extends Model{
 		$sql = new Sql();
 
 		$results = $sql->select("SELECT * FROM tb_users a INNER JOIN tb_persons b USING(idperson) WHERE a.iduser = :iduser", array(
-
 			":iduser"=>$iduser
-
 		));
+
+		$data = $results[0];
 
 		$data['desperson'] = utf8_encode($data['desperson']);
 
@@ -307,6 +305,15 @@ class User extends Model{
 		$_SESSION[User::ERROR_REGISTER] = $msg;
 	}
 
+	public static function getErrorRegister()
+	{
+		$msg = (isset($_SESSION[User::ERROR_REGISTER]) && $_SESSION[User::ERROR_REGISTER]) ? $_SESSION[User::ERROR_REGISTER] : '';
+
+		User::clearErrorRegister();
+
+		return $msg;
+	}
+
 	public static function getPasswordHash($password)
 	{
 
@@ -314,7 +321,24 @@ class User extends Model{
 		'cost'=>12
 		]);
 	}
+
+	public static function clearErrorRegister()
+	{
+		$_SESSION[User::ERROR_REGISTER] = NULL;
+	}
 	
+	public static function checkLoginExist($login)
+	{
+		$sql = new Sql();
+
+		$results = $sql->select("SELECT * FROM tb_users WHERE deslogin = :deslogin", [
+			':deslogin'=>$login
+		]);
+
+		return (count($results) > 0);
+
+		
+	}
 
 }
 
